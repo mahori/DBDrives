@@ -187,6 +187,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="DBDrives.h" />
     <ClInclude Include="DBDrivesDlg.h" />
     <ClInclude Include="framework.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="DBDrives.cpp" />
     <ClCompile Include="DBDrivesDlg.cpp" />
     <ClCompile Include="pch.cpp">
