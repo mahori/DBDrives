@@ -1,34 +1,21 @@
-﻿
-// DBDrivesDlg.h : ヘッダー ファイル
-//
+﻿#pragma once
 
-#pragma once
-
-
-// CDBDrivesDlg ダイアログ
 class CDBDrivesDlg : public CDialogEx
 {
-    // コンストラクション
 public:
-    CDBDrivesDlg(CWnd* pParent = nullptr);  // 標準コンストラクター
+    CDBDrivesDlg(CWnd* pParent = nullptr);
 
-// ダイアログ データ
 #ifdef AFX_DESIGN_TIME
     enum { IDD = IDD_DBDRIVES_DIALOG };
 #endif
 
 protected:
-    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV サポート
-
-
-// 実装
-protected:
     HICON m_hIcon;
 
-    // 生成された、メッセージ割り当て関数
-    virtual BOOL OnInitDialog();
+    void DoDataExchange(CDataExchange* pDX) override;
+    BOOL OnInitDialog(void) override;
     afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-    afx_msg void OnPaint();
-    afx_msg HCURSOR OnQueryDragIcon();
+    afx_msg void OnPaint(void);
+    afx_msg HCURSOR OnQueryDragIcon(void);
     DECLARE_MESSAGE_MAP()
 };

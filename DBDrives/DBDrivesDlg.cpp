@@ -1,39 +1,29 @@
-﻿
-// DBDrivesDlg.cpp : 実装ファイル
-//
-
-#include "pch.h"
+﻿#include "pch.h"
 #include "framework.h"
-#include "DBDrives.h"
 #include "DBDrivesDlg.h"
+#include "DBDrives.h"
 #include "afxdialogex.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-
-// アプリケーションのバージョン情報に使われる CAboutDlg ダイアログ
-
 class CAboutDlg : public CDialogEx
 {
 public:
-    CAboutDlg();
-
-    // ダイアログ データ
+    CAboutDlg(void);
 #ifdef AFX_DESIGN_TIME
     enum { IDD = IDD_ABOUTBOX };
 #endif
 
 protected:
-    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV サポート
+    virtual void DoDataExchange(CDataExchange* pDX);
 
-// 実装
 protected:
     DECLARE_MESSAGE_MAP()
 };
 
-CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
+CAboutDlg::CAboutDlg(void) : CDialogEx(IDD_ABOUTBOX)
 {
 }
 
@@ -45,12 +35,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
-
-// CDBDrivesDlg ダイアログ
-
-
-
-CDBDrivesDlg::CDBDrivesDlg(CWnd* pParent /*=nullptr*/)
+CDBDrivesDlg::CDBDrivesDlg(CWnd* pParent)
     : CDialogEx(IDD_DBDRIVES_DIALOG, pParent)
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -67,16 +52,10 @@ BEGIN_MESSAGE_MAP(CDBDrivesDlg, CDialogEx)
     ON_WM_QUERYDRAGICON()
 END_MESSAGE_MAP()
 
-
-// CDBDrivesDlg メッセージ ハンドラー
-
-BOOL CDBDrivesDlg::OnInitDialog()
+BOOL CDBDrivesDlg::OnInitDialog(void)
 {
     CDialogEx::OnInitDialog();
 
-    // "バージョン情報..." メニューをシステム メニューに追加します。
-
-    // IDM_ABOUTBOX は、システム コマンドの範囲内になければなりません。
     ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
     ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -94,14 +73,10 @@ BOOL CDBDrivesDlg::OnInitDialog()
         }
     }
 
-    // このダイアログのアイコンを設定します。アプリケーションのメイン ウィンドウがダイアログでない場合、
-    //  Framework は、この設定を自動的に行います。
-    SetIcon(m_hIcon, TRUE);         // 大きいアイコンの設定
-    SetIcon(m_hIcon, FALSE);        // 小さいアイコンの設定
+    SetIcon(m_hIcon, TRUE);
+    SetIcon(m_hIcon, FALSE);
 
-    // TODO: 初期化をここに追加します。
-
-    return TRUE;  // フォーカスをコントロールに設定した場合を除き、TRUE を返します。
+    return TRUE;
 }
 
 void CDBDrivesDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -117,27 +92,21 @@ void CDBDrivesDlg::OnSysCommand(UINT nID, LPARAM lParam)
     }
 }
 
-// ダイアログに最小化ボタンを追加する場合、アイコンを描画するための
-//  下のコードが必要です。ドキュメント/ビュー モデルを使う MFC アプリケーションの場合、
-//  これは、Framework によって自動的に設定されます。
-
-void CDBDrivesDlg::OnPaint()
+void CDBDrivesDlg::OnPaint(void)
 {
     if (IsIconic())
     {
-        CPaintDC dc(this); // 描画のデバイス コンテキスト
+        CPaintDC dc(this);
 
         SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-        // クライアントの四角形領域内の中央
         int cxIcon = GetSystemMetrics(SM_CXICON);
         int cyIcon = GetSystemMetrics(SM_CYICON);
         CRect rect;
         GetClientRect(&rect);
-        int x = (rect.Width() - cxIcon + 1) / 2;
+        int x = (rect.Width()  - cxIcon + 1) / 2;
         int y = (rect.Height() - cyIcon + 1) / 2;
 
-        // アイコンの描画
         dc.DrawIcon(x, y, m_hIcon);
     }
     else
@@ -146,10 +115,7 @@ void CDBDrivesDlg::OnPaint()
     }
 }
 
-// ユーザーが最小化したウィンドウをドラッグしているときに表示するカーソルを取得するために、
-//  システムがこの関数を呼び出します。
-HCURSOR CDBDrivesDlg::OnQueryDragIcon()
+HCURSOR CDBDrivesDlg::OnQueryDragIcon(void)
 {
     return static_cast<HCURSOR>(m_hIcon);
 }
-

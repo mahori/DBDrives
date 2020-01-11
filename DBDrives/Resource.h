@@ -1,15 +1,11 @@
 ﻿//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ で生成されたインクルード ファイル。
-// DBDrives.rc で使用されます
-//
+
 #define IDR_MAINFRAME                   128
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
 #define IDD_DBDRIVES_DIALOG             102
 
-// 新しいオブジェクトの次の既定値
-//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 
