@@ -33,7 +33,7 @@ BOOL CDBDrivesApp::InitInstance(void)
 
     CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
 
-    SetRegistryKey(_T("アプリケーション ウィザードで生成されたローカル アプリケーション"));
+    SetRegistryKey(_T("mahori"));
 
     CDBDrivesDlg dlg;
     m_pMainWnd = &dlg;
