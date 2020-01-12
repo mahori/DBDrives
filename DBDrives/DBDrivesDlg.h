@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+class Drives;
+
 class CDBDrivesDlg : public CDialogEx
 {
 public:
@@ -18,4 +20,7 @@ protected:
     afx_msg void OnPaint(void);
     afx_msg HCURSOR OnQueryDragIcon(void);
     DECLARE_MESSAGE_MAP()
+
+private:
+    std::shared_ptr<Drives> m_pDrives;
 };

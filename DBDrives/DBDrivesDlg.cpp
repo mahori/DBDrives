@@ -2,7 +2,10 @@
 #include "framework.h"
 #include "DBDrivesDlg.h"
 #include "AboutDlg.h"
+#include "Drives.h"
 #include "Resource.h"
+
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -10,6 +13,7 @@
 
 CDBDrivesDlg::CDBDrivesDlg(CWnd* pParent)
     : CDialogEx(IDD_DBDRIVES_DIALOG, pParent)
+    , m_pDrives(make_shared<Drives>())
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }

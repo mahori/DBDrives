@@ -97,6 +97,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -120,6 +121,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -147,6 +149,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -174,6 +177,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -188,23 +192,39 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
+    <ClInclude Include="AtaSmart.h" />
+    <ClInclude Include="Database.h" />
     <ClInclude Include="DBDrives.h" />
     <ClInclude Include="DBDrivesDlg.h" />
+    <ClInclude Include="DnpService.h" />
+    <ClInclude Include="Drive.h" />
+    <ClInclude Include="Drives.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GetOsInfo.h" />
+    <ClInclude Include="NVMeInterpreter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SlotSpeedGetter.h" />
+    <ClInclude Include="SPTIUtil.h" />
+    <ClInclude Include="StorageQuery.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
+    <ClCompile Include="AtaSmart.cpp" />
+    <ClCompile Include="Database.cpp" />
     <ClCompile Include="DBDrives.cpp" />
     <ClCompile Include="DBDrivesDlg.cpp" />
+    <ClCompile Include="Drive.cpp" />
+    <ClCompile Include="Drives.cpp" />
+    <ClCompile Include="NVMeInterpreter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SlotSpeedGetter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DBDrives.rc" />
