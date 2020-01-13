@@ -12,6 +12,10 @@ public:
     bool deleteDriveInfo(void);
 
 private:
+#ifdef DEBUG_MAHORI
+    std::size_t index_;
+#else
     std::unique_ptr<CDatabase> pDatabase_;
     CString connectString_;
+#endif
 };
