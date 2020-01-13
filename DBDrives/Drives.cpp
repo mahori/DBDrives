@@ -65,6 +65,25 @@ Drives::Drives(void)
     }
 }
 
+bool Drives::registerDriveInfo(std::size_t index)
+{
+    Database database;
+
+    return database.registerDriveInfo();
+}
+bool Drives::updateDriveInfo(std::size_t index)
+{
+    Database database;
+
+    return database.updateDriveInfo();
+}
+bool Drives::deleteDriveInfo(std::size_t index)
+{
+    Database database;
+
+    return database.deleteDriveInfo();
+}
+
 size_t Drives::count(void) const
 {
     return drives_.size();

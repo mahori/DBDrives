@@ -27,6 +27,9 @@ void CDBDrivesDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_EDIT_MODEL_NUMBER, m_EditModelNumber);
     DDX_Control(pDX, IDC_EDIT_SERIAL_NUMBER, m_EditSerialNumber);
     DDX_Control(pDX, IDC_EDIT_WARRANTY_EXPIRES, m_EditWarrantyExpires);
+    DDX_Control(pDX, IDC_BUTTON_REGISTER, m_BottonRegister);
+    DDX_Control(pDX, IDC_BUTTON_UPDATE, m_BottonUpdate);
+    DDX_Control(pDX, IDC_BUTTON_DELETE, m_BottonDelete);
 }
 
 BEGIN_MESSAGE_MAP(CDBDrivesDlg, CDialogEx)
@@ -34,6 +37,9 @@ BEGIN_MESSAGE_MAP(CDBDrivesDlg, CDialogEx)
     ON_WM_PAINT()
     ON_WM_QUERYDRAGICON()
     ON_CBN_SELCHANGE(IDC_COMBOBOX, &CDBDrivesDlg::OnCbnSelchangeCombobox)
+    ON_BN_CLICKED(IDC_BUTTON_REGISTER, &CDBDrivesDlg::OnBnClickedButtonRegister)
+    ON_BN_CLICKED(IDC_BUTTON_UPDATE, &CDBDrivesDlg::OnBnClickedButtonUpdate)
+    ON_BN_CLICKED(IDC_BUTTON_DELETE, &CDBDrivesDlg::OnBnClickedButtonDelete)
 END_MESSAGE_MAP()
 
 BOOL CDBDrivesDlg::OnInitDialog(void)
@@ -129,4 +135,19 @@ void CDBDrivesDlg::OnCbnSelchangeCombobox(void)
     m_EditModelNumber.SetWindowText(m_pDrives->modelNumber(index));
     m_EditSerialNumber.SetWindowText(m_pDrives->serialNumber(index));
     m_EditWarrantyExpires.SetWindowText(m_pDrives->warrantyExpires(index));
+}
+
+void CDBDrivesDlg::OnBnClickedButtonRegister(void)
+{
+    m_pDrives->registerDriveInfo(m_ComboBox.GetCurSel());
+}
+
+void CDBDrivesDlg::OnBnClickedButtonUpdate(void)
+{
+    m_pDrives->updateDriveInfo(m_ComboBox.GetCurSel());
+}
+
+void CDBDrivesDlg::OnBnClickedButtonDelete(void)
+{
+    m_pDrives->deleteDriveInfo(m_ComboBox.GetCurSel());
 }

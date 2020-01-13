@@ -51,3 +51,18 @@ std::tuple<CString, CString, CString, CString, CString> Database::queryDriveInfo
 
     return std::make_tuple(id, vendor, modelNumber, serialNumber, warrantyExpires);
 }
+
+bool Database::registerDriveInfo(void)
+{
+    return true;
+}
+
+bool Database::updateDriveInfo(void)
+{
+    return true;
+}
+
+bool Database::deleteDriveInfo(void)
+{
+    return true;
+}

@@ -7,6 +7,10 @@ class Drives
 public:
 	Drives(void);
 
+	bool registerDriveInfo(std::size_t index);
+	bool updateDriveInfo(std::size_t index);
+	bool deleteDriveInfo(std::size_t index);
+
 	std::size_t count(void) const;
 	CString driveLetter(std::size_t index) const;
 	CString id(std::size_t index) const;

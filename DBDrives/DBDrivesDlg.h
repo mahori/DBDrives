@@ -28,7 +28,13 @@ private:
     CEdit m_EditModelNumber;
     CEdit m_EditSerialNumber;
     CEdit m_EditWarrantyExpires;
+    CButton m_BottonRegister;
+    CButton m_BottonUpdate;
+    CButton m_BottonDelete;
     std::shared_ptr<Drives> m_pDrives;
 
     afx_msg void OnCbnSelchangeCombobox(void);
+    afx_msg void OnBnClickedButtonRegister(void);
+    afx_msg void OnBnClickedButtonUpdate(void);
+    afx_msg void OnBnClickedButtonDelete(void);
 };
