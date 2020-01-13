@@ -20,7 +20,15 @@ Database::Database(void)
 #ifndef DEBUG_MAHORI
     connectString_ = ::AfxGetApp()->GetProfileString(_T("Database"), _T("ConnectString"), nullptr);
 
-    pDatabase_->OpenEx(connectString_, CDatabase::openReadOnly);
+    try
+    {
+        pDatabase_->OpenEx(connectString_);
+    }
+    catch (CDBException* pe)
+    {
+        pe->ReportError();
+        pe->Delete();
+    }
 #endif
 }
 
@@ -34,13 +42,13 @@ Database::~Database(void)
 #endif
 }
 
-std::tuple<CString, CString, CString, CString, CString> Database::queryDriveInfo(const CString& serialNumber)
+tuple<size_t, CString, CString, CString, COleDateTime> Database::queryDriveInfo(const CString& serialNumber)
 {
-    CString id = _T("0");
+    size_t id = 0;
     CString vendor;
     CString modelNumber;
     // CString serialNumber;
-    CString warrantyExpires;
+    COleDateTime warrantyExpires;
 
 #ifdef DEBUG_MAHORI
     id              = IDList[index_];
@@ -52,40 +60,170 @@ std::tuple<CString, CString, CString, CString, CString> Database::queryDriveInfo
     if (pDatabase_->IsOpen())
     {
         CString sql;
-        sql.Format(_T("SELECT ID, VENDOR, MODEL_NUMBER, SERIAL_NUMBER, WARRANTY_EXPIRES FROM DRIVES WHERE SERIAL_NUMBER = '%s'"), serialNumber.GetString());
+        sql.Format(_T("SELECT ID, VENDOR, MODEL_NUMBER, SERIAL_NUMBER, WARRANTY_EXPIRES FROM DRIVES WHERE SERIAL_NUMBER = '%s'"), serialNumber);
 
         CRecordset recordset(pDatabase_.get());
 
-        if (recordset.Open(CRecordset::forwardOnly, sql, CRecordset::readOnly))
+        try
         {
-            if (recordset.GetRecordCount())
+            if (recordset.Open(CRecordset::forwardOnly, sql, CRecordset::readOnly))
             {
-                recordset.GetFieldValue((short)0, id);
-                recordset.GetFieldValue((short)1, vendor);
-                recordset.GetFieldValue((short)2, modelNumber);
-                // recordset.GetFieldValue((short)3, serialNumber);
-                recordset.GetFieldValue((short)4, warrantyExpires);
-            }
+                if (recordset.GetRecordCount())
+                {
+                    CDBVariant v;
 
-            recordset.Close();
+                    // ID
+                    v.Clear();
+                    recordset.GetFieldValue(_T("ID"), v, SQL_C_SLONG);
+                    id = static_cast<size_t>(v.m_lVal);
+
+                    // VENDOR
+                    v.Clear();
+                    recordset.GetFieldValue(_T("VENDOR"), v, SQL_C_WCHAR);
+                    vendor = *(v.m_pstringW);
+
+                    // MODEL_NUMBER
+                    v.Clear();
+                    recordset.GetFieldValue(_T("MODEL_NUMBER"), v, SQL_C_WCHAR);
+                    modelNumber = *(v.m_pstringW);
+
+                    // SERIAL_NUMBER
+                    //v.Clear();
+                    //recordset.GetFieldValue(_T("SERIAL_NUMBER"), v, SQL_C_WCHAR);
+                    //serialNumber = *(v.m_pstringW);
+
+                    // WARRANTY_EXPIRES
+                    v.Clear();
+                    recordset.GetFieldValue(_T("WARRANTY_EXPIRES"), v, SQL_C_TIMESTAMP);
+                    if (v.m_dwType == DBVT_DATE)
+                    {
+                        warrantyExpires = COleDateTime(v.m_pdate->year, v.m_pdate->month, v.m_pdate->day, 0, 0, 0);
+                    }
+                }
+
+                recordset.Close();
+            }
+        }
+        catch (CDBException* pe)
+        {
+            pe->ReportError();
+            pe->Delete();
         }
     }
 #endif
 
-    return std::make_tuple(id, vendor, modelNumber, serialNumber, warrantyExpires);
+    return make_tuple(id, vendor, modelNumber, serialNumber, warrantyExpires);
 }
 
-bool Database::registerDriveInfo(void)
+size_t Database::registerDriveInfo(const CString& vendor, const CString& modelNumber, const CString& serialNumber, const COleDateTime& warrantyExpires)
 {
+    size_t newID = 0;
+
+    if (pDatabase_->IsOpen())
+    {
+        CString sql;
+
+        if (warrantyExpires == COleDateTime())
+        {
+            sql.Format(_T("INSERT INTO DRIVES ( VENDOR, MODEL_NUMBER, SERIAL_NUMBER ) VALUES ( '%s', '%s', '%s' )"), vendor, modelNumber, serialNumber);
+        }
+        else
+        {
+            sql.Format(_T("INSERT INTO DRIVES ( VENDOR, MODEL_NUMBER, SERIAL_NUMBER, WARRANTY_EXPIRES ) VALUES ( '%s', '%s', '%s', TO_DATE( '%s', 'YYYY/MM/DD' ) )"), vendor, modelNumber, serialNumber, warrantyExpires.Format(_T("%Y/%m/%d")));
+        }
+
+        try
+        {
+            pDatabase_->ExecuteSQL(sql);
+        }
+        catch (CDBException* pe)
+        {
+            pe->ReportError();
+            pe->Delete();
+
+            return 0;
+        }
+
+        sql.Format(_T("SELECT ID FROM DRIVES WHERE SERIAL_NUMBER = '%s'"), serialNumber);
+
+        CRecordset recordset(pDatabase_.get());
+
+        try
+        {
+            if (recordset.Open(CRecordset::forwardOnly, sql, CRecordset::readOnly))
+            {
+                if (recordset.GetRecordCount())
+                {
+                    CDBVariant v;
+                    v.Clear();
+                    recordset.GetFieldValue(_T("ID"), v, SQL_C_SLONG);
+                    newID = static_cast<size_t>(v.m_lVal);
+                }
+
+                recordset.Close();
+            }
+        }
+        catch (CDBException* pe)
+        {
+            pe->ReportError();
+            pe->Delete();
+
+            return 0;
+        }
+    }
+
+    return newID;
+}
+
+bool Database::updateDriveInfo(size_t id, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const COleDateTime& warrantyExpires)
+{
+    if (pDatabase_->IsOpen())
+    {
+        CString sql;
+        if (warrantyExpires == COleDateTime())
+        {
+            sql.Format(_T("UPDATE DRIVES SET ID = %llu, VENDOR = '%s', MODEL_NUMBER = '%s' WHERE SERIAL_NUMBER = '%s'"), id, vendor, modelNumber, serialNumber);
+        }
+        else
+        {
+            sql.Format(_T("UPDATE DRIVES SET ID = %llu, VENDOR = '%s', MODEL_NUMBER = '%s', WARRANTY_EXPIRES = TO_DATE( '%s', 'YYYY/MM/DD' ) WHERE SERIAL_NUMBER = '%s'"), id, vendor, modelNumber, warrantyExpires.Format(_T("%Y/%m/%d")), serialNumber);
+        }
+
+        try
+        {
+            pDatabase_->ExecuteSQL(sql);
+        }
+        catch (CDBException* pe)
+        {
+            pe->ReportError();
+            pe->Delete();
+
+            return false;
+        }
+    }
+
     return true;
 }
 
-bool Database::updateDriveInfo(void)
+bool Database::deleteDriveInfo(const CString& serialNumber)
 {
-    return true;
-}
+    if (pDatabase_->IsOpen())
+    {
+        CString sql;
+        sql.Format(_T("DELETE FROM DRIVES WHERE SERIAL_NUMBER = '%s'"), serialNumber);
 
-bool Database::deleteDriveInfo(void)
-{
+        try
+        {
+            pDatabase_->ExecuteSQL(sql);
+        }
+        catch (CDBException* pe)
+        {
+            pe->ReportError();
+            pe->Delete();
+
+            return false;
+        }
+    }
+
     return true;
 }

@@ -6,10 +6,10 @@ public:
     Database(void);
     ~Database(void);
 
-    std::tuple<CString, CString, CString, CString, CString> queryDriveInfo(const CString& serialNumber);
-    bool registerDriveInfo(void);
-    bool updateDriveInfo(void);
-    bool deleteDriveInfo(void);
+    std::tuple<std::size_t, CString, CString, CString, COleDateTime> queryDriveInfo(const CString& serialNumber);
+    std::size_t Database::registerDriveInfo(const CString& vendor, const CString& modelNumber, const CString& serialNumber, const COleDateTime& warrantyExpires);
+    bool updateDriveInfo(std::size_t id, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const COleDateTime& warrantyExpires);
+    bool deleteDriveInfo(const CString& serialNumber);
 
 private:
 #ifdef DEBUG_MAHORI

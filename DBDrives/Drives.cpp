@@ -64,13 +64,13 @@ Drives::Drives(void)
     {
         auto [id, vendor, modelNumber, serialNumber, warrantyExpires] = database.queryDriveInfo(SerialNumberList[i]);
 
-        if (id.Compare(_T("0")))
+        if (id == 0)
         {
-            drives_.push_back(make_shared<Drive>(id, DriveLetterList[i], vendor, modelNumber, serialNumber, warrantyExpires));
+            drives_.push_back(make_shared<Drive>(id, DriveLetterList[i], VendorList[VendorIDList[i]], ModelNumberList[i], serialNumber, warrantyExpires));
         }
         else
         {
-            drives_.push_back(make_shared<Drive>(id, DriveLetterList[i], VendorList[VendorIDList[i]], ModelNumberList[i], serialNumber, warrantyExpires));
+            drives_.push_back(make_shared<Drive>(id, DriveLetterList[i], vendor, modelNumber, serialNumber, warrantyExpires));
         }
     }
 #else
@@ -78,35 +78,56 @@ Drives::Drives(void)
     {
         auto [id, vendor, modelNumber, serialNumber, warrantyExpires] = database.queryDriveInfo(ataSmart.vars[i].SerialNumber);
 
-        if (id.Compare(_T("0")))
+        if (id == 0)
         {
-            drives_.push_back(make_shared<Drive>(id, ataSmart.vars[i].DriveMap, vendor, modelNumber, serialNumber, warrantyExpires));
+            drives_.push_back(make_shared<Drive>(id, ataSmart.vars[i].DriveMap, VendorList[ataSmart.vars[i].DiskVendorId], ataSmart.vars[i].Model, serialNumber, warrantyExpires));
         }
         else
         {
-            drives_.push_back(make_shared<Drive>(id, ataSmart.vars[i].DriveMap, VendorList[ataSmart.vars[i].DiskVendorId], modelNumber, serialNumber, warrantyExpires));
+            drives_.push_back(make_shared<Drive>(id, ataSmart.vars[i].DriveMap, vendor, modelNumber, serialNumber, warrantyExpires));
         }
     }
 #endif
 }
 
-bool Drives::registerDriveInfo(std::size_t index)
+bool Drives::registerDriveInfo(size_t index, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const COleDateTime& warrantyExpires)
 {
+    auto drive = drives_.at(index);
+    drive->vendor(vendor);
+    drive->modelNumber(modelNumber);
+    drive->serialNumber(serialNumber);
+    drive->warrantyExpires(warrantyExpires);
+
     Database database;
 
-    return database.registerDriveInfo();
+    size_t newID = database.registerDriveInfo(vendor, modelNumber, serialNumber, warrantyExpires);
+    drive->id(newID);
+
+    return (newID != 0) ? true : false;
 }
-bool Drives::updateDriveInfo(std::size_t index)
+
+bool Drives::updateDriveInfo(size_t index, size_t id, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const COleDateTime& warrantyExpires)
 {
+    auto drive = drives_.at(index);
+    drive->id(id);
+    drive->vendor(vendor);
+    drive->modelNumber(modelNumber);
+    drive->serialNumber(serialNumber);
+    drive->warrantyExpires(warrantyExpires);
+
     Database database;
 
-    return database.updateDriveInfo();
+    return database.updateDriveInfo(id, vendor, modelNumber, serialNumber, warrantyExpires);
 }
-bool Drives::deleteDriveInfo(std::size_t index)
+
+bool Drives::deleteDriveInfo(size_t index)
 {
+    auto drive = drives_.at(index);
+    drive->id(0);
+
     Database database;
 
-    return database.deleteDriveInfo();
+    return database.deleteDriveInfo(drive->serialNumber());
 }
 
 size_t Drives::count(void) const
@@ -119,27 +140,27 @@ CString Drives::driveLetter(size_t index) const
     return drives_.at(index)->driveLetter();
 }
 
-CString Drives::id(std::size_t index) const
+size_t Drives::id(size_t index) const
 {
     return drives_.at(index)->id();
 }
 
-CString Drives::vendor(std::size_t index) const
+CString Drives::vendor(size_t index) const
 {
     return drives_.at(index)->vendor();
 }
 
-CString Drives::modelNumber(std::size_t index) const
+CString Drives::modelNumber(size_t index) const
 {
     return drives_.at(index)->modelNumber();
 }
 
-CString Drives::serialNumber(std::size_t index) const
+CString Drives::serialNumber(size_t index) const
 {
     return drives_.at(index)->serialNumber();
 }
 
-CString Drives::warrantyExpires(std::size_t index) const
+COleDateTime Drives::warrantyExpires(size_t index) const
 {
     return drives_.at(index)->warrantyExpires();
 }

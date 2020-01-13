@@ -3,20 +3,25 @@
 class Drive
 {
 public:
-	Drive(const CString& id, const CString& driveletter, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const CString& warrantyExpires);
+	Drive(std::size_t, const CString& driveletter, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const COleDateTime& warrantyExpires);
 
-	CString id(void) const;
+	std::size_t id(void) const;
+	void id(std::size_t id);
 	CString driveLetter(void) const;
 	CString vendor(void) const;
+	void vendor(const CString& vendor);
 	CString modelNumber(void) const;
+	void modelNumber(const CString& modelNumber);
 	CString serialNumber(void) const;
-	CString warrantyExpires(void) const;
+	void serialNumber(const CString& serialNumber);
+	COleDateTime warrantyExpires(void) const;
+	void warrantyExpires(const COleDateTime& warrantyExpires);
 
 private:
-	CString id_;
+	std::size_t id_;
 	CString driveLetter_;
 	CString vendor_;
 	CString modelNumber_;
 	CString serialNumber_;
-	CString warrantyExpires_;
+	COleDateTime warrantyExpires_;
 };

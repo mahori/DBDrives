@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "Drive.h"
 
-Drive::Drive(const CString& id, const CString& driveLetter, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const CString& warrantyExpires)
+using namespace std;
+
+Drive::Drive(size_t id, const CString& driveLetter, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const COleDateTime& warrantyExpires)
     : id_(id)
     , driveLetter_(driveLetter)
     , vendor_(vendor)
@@ -9,19 +11,19 @@ Drive::Drive(const CString& id, const CString& driveLetter, const CString& vendo
     , serialNumber_(serialNumber)
     , warrantyExpires_(warrantyExpires)
 {
-    TRACE2("DriveID = %s, Driveletter = %s\n", id_, driveLetter_);
+    TRACE2("DriveID = %d, Driveletter = %s\n", id_, driveLetter_);
     TRACE2("\tVendor = %s, ModelNumber = %s\n", vendor_, modelNumber_);
-    TRACE2("\tSeriaNumber = %s, WarrantyExpires = %s\n", serialNumber_, warrantyExpires_);
+    TRACE2("\tSeriaNumber = %s, WarrantyExpires = %s\n", serialNumber_, warrantyExpires_.Format(_T("%Y/%m/%d")));
 }
 
-CString Drive::id(void) const
+size_t Drive::id(void) const
 {
     return id_;
 }
 
-CString Drive::serialNumber(void) const
+void Drive::id(size_t id)
 {
-    return serialNumber_;
+    id_ = id;
 }
 
 CString Drive::driveLetter(void) const
@@ -34,12 +36,37 @@ CString Drive::vendor(void) const
     return vendor_;
 }
 
+void Drive::vendor(const CString& vendor)
+{
+    vendor_ = vendor;
+}
+
 CString Drive::modelNumber(void) const
 {
     return modelNumber_;
 }
 
-CString Drive::warrantyExpires(void) const
+void Drive::modelNumber(const CString& modelNumber)
+{
+    modelNumber_ = modelNumber;
+}
+
+CString Drive::serialNumber(void) const
+{
+    return serialNumber_;
+}
+
+void Drive::serialNumber(const CString& serialNumber)
+{
+    serialNumber_ = serialNumber;
+}
+
+COleDateTime Drive::warrantyExpires(void) const
 {
     return warrantyExpires_;
+}
+
+void Drive::warrantyExpires(const COleDateTime& warrantyExpires)
+{
+    warrantyExpires_ = warrantyExpires;
 }

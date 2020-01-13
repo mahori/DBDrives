@@ -130,24 +130,104 @@ void CDBDrivesDlg::OnCbnSelchangeCombobox(void)
 {
     int index = m_ComboBox.GetCurSel();
 
-    m_EditID.SetWindowText(m_pDrives->id(index));
+    size_t id = m_pDrives->id(index);
+    if (id == 0)
+    {
+        m_EditID.SetWindowText(_T(""));
+    }
+    else
+    {
+        CString idStr;
+        idStr.Format(_T("%llu"), id);
+        m_EditID.SetWindowText(idStr);
+    }
+
     m_EditVendor.SetWindowText(m_pDrives->vendor(index));
     m_EditModelNumber.SetWindowText(m_pDrives->modelNumber(index));
     m_EditSerialNumber.SetWindowText(m_pDrives->serialNumber(index));
-    m_EditWarrantyExpires.SetWindowText(m_pDrives->warrantyExpires(index));
+
+    if (m_pDrives->warrantyExpires(index) == COleDateTime())
+    {
+        m_EditWarrantyExpires.SetWindowText(_T(""));
+    }
+    else
+    {
+        m_EditWarrantyExpires.SetWindowText(m_pDrives->warrantyExpires(index).Format(_T("%Y/%m/%d")));
+    }
+
+    if (id == 0)
+    {
+        m_BottonRegister.EnableWindow(TRUE);
+        m_BottonUpdate.EnableWindow(FALSE);
+        m_BottonDelete.EnableWindow(FALSE);
+    }
+    else
+    {
+        m_BottonRegister.EnableWindow(FALSE);
+        m_BottonUpdate.EnableWindow(TRUE);
+        m_BottonDelete.EnableWindow(TRUE);
+    }
 }
 
 void CDBDrivesDlg::OnBnClickedButtonRegister(void)
 {
-    m_pDrives->registerDriveInfo(m_ComboBox.GetCurSel());
+    int index = m_ComboBox.GetCurSel();
+
+    CString vendor;
+    m_EditVendor.GetWindowText(vendor);
+
+    CString modelNumber;
+    m_EditModelNumber.GetWindowText(modelNumber);
+
+    CString serialNumber;
+    m_EditSerialNumber.GetWindowText(serialNumber);
+
+    CString warrantyExpiresStr;
+    m_EditWarrantyExpires.GetWindowText(warrantyExpiresStr);
+    COleDateTime warrantyExpires;
+    if (!warrantyExpiresStr.IsEmpty())
+    {
+        warrantyExpires.ParseDateTime(warrantyExpiresStr);
+    }
+
+    m_pDrives->registerDriveInfo(index, vendor, modelNumber, serialNumber, warrantyExpires);
+
+    OnCbnSelchangeCombobox();
 }
 
 void CDBDrivesDlg::OnBnClickedButtonUpdate(void)
 {
-    m_pDrives->updateDriveInfo(m_ComboBox.GetCurSel());
+    int index = m_ComboBox.GetCurSel();
+
+    CString idStr;
+    m_EditID.GetWindowText(idStr);
+    size_t id = _ttol(idStr);
+
+    CString vendor;
+    m_EditVendor.GetWindowText(vendor);
+
+    CString modelNumber;
+    m_EditModelNumber.GetWindowText(modelNumber);
+
+    CString serialNumber;
+    m_EditSerialNumber.GetWindowText(serialNumber);
+
+    CString warrantyExpiresStr;
+    m_EditWarrantyExpires.GetWindowText(warrantyExpiresStr);
+    COleDateTime warrantyExpires;
+    if (!warrantyExpiresStr.IsEmpty())
+    {
+        warrantyExpires.ParseDateTime(warrantyExpiresStr);
+    }
+
+    m_pDrives->updateDriveInfo(m_ComboBox.GetCurSel(), id, vendor, modelNumber, serialNumber, warrantyExpires);
+
+    OnCbnSelchangeCombobox();
 }
 
 void CDBDrivesDlg::OnBnClickedButtonDelete(void)
 {
     m_pDrives->deleteDriveInfo(m_ComboBox.GetCurSel());
+
+    OnCbnSelchangeCombobox();
 }
