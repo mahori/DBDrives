@@ -62,7 +62,16 @@ BOOL CDBDrivesDlg::OnInitDialog(void)
 
     for (auto i = 0; i < m_pDrives->count(); ++i)
     {
-        m_ComboBox.AddString(m_pDrives->caption(i));
+        CString caption;
+        caption.Append(m_pDrives->driveLetter(i));
+        caption.Append(_T(" "));
+        caption.Append(m_pDrives->vendor(i));
+        caption.Append(_T(" "));
+        caption.Append(m_pDrives->modelNumber(i));
+        caption.Append(_T(" "));
+        caption.Append(m_pDrives->serialNumber(i));
+
+        m_ComboBox.AddString(caption);
     }
     m_ComboBox.SetCurSel(0);
     OnCbnSelchangeCombobox();

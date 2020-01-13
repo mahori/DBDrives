@@ -70,20 +70,9 @@ size_t Drives::count(void) const
     return drives_.size();
 }
 
-CString Drives::caption(size_t index) const
+CString Drives::driveLetter(size_t index) const
 {
-    shared_ptr<Drive> drive = drives_.at(index);
-
-    CString caption;
-    caption.Append(drive->driveLetter());
-    caption.Append(_T(" "));
-    caption.Append(drive->vendor());
-    caption.Append(_T(" "));
-    caption.Append(drive->modelNumber());
-    caption.Append(_T(" "));
-    caption.Append(drive->serialNumber());
-
-    return caption;
+    return drives_.at(index)->driveLetter();
 }
 
 CString Drives::id(std::size_t index) const

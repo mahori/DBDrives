@@ -8,7 +8,7 @@ public:
 	Drives(void);
 
 	std::size_t count(void) const;
-	CString caption(std::size_t index) const;
+	CString driveLetter(std::size_t index) const;
 	CString id(std::size_t index) const;
 	CString vendor(std::size_t index) const;
 	CString modelNumber(std::size_t index) const;
