@@ -3,7 +3,7 @@
 class Drive
 {
 public:
-	Drive(const CString& id, const CString& driveletter, int vendorID, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const CString& warrantyExpires);
+	Drive(const CString& id, const CString& driveletter, const CString& vendor, const CString& modelNumber, const CString& serialNumber, const CString& warrantyExpires);
 
 	CString id(void) const;
 	CString driveLetter(void) const;
@@ -15,7 +15,6 @@ public:
 private:
 	CString id_;
 	CString driveLetter_;
-	int vendorID_;
 	CString vendor_;
 	CString modelNumber_;
 	CString serialNumber_;

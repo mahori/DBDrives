@@ -6,6 +6,32 @@
 
 using namespace std;
 
+static LPCTSTR VendorList[] = {
+    _T("HDD_GENERAL"),
+    _T("SSD_GENERAL"),
+    _T("SSD_VENDOR_MTRON"),
+    _T("SSD_VENDOR_INDILINX"),
+    _T("SSD_VENDOR_JMICRON"),
+    _T("SSD_VENDOR_INTEL"),
+    _T("SSD_VENDOR_SAMSUNG"),
+    _T("SSD_VENDOR_SANDFORCE"),
+    _T("SSD_VENDOR_MICRON"),
+    _T("SSD_VENDOR_OCZ"),
+    _T("Seagate Technology"),  // HDD_SSD_VENDOR_SEAGATE
+    _T("Western Digital"),     // HDD_VENDOR_WESTERN_DIGITAL
+    _T("SSD_VENDOR_PLEXTOR"),
+    _T("SSD_VENDOR_SANDISK"),
+    _T("SSD_VENDOR_OCZ_VECTOR"),
+    _T("HDD_SSD_VENDOR_TOSHIBA"),
+    _T("SSD_VENDOR_CORSAIR"),
+    _T("SSD_VENDOR_KINGSTON"),
+    _T("SSD_VENDOR_MICRON_MU02"),
+    _T("SSD_VENDOR_NVME"),
+    _T("SSD_VENDOR_REALTEK"),
+    _T("SSD_VENDOR_SKhynix"),
+    _T("SSD_VENDOR_MAX"),
+};
+
 Drives::Drives(void)
 {
     CAtaSmart ataSmart;
@@ -28,7 +54,14 @@ Drives::Drives(void)
     {
         auto [id, vendor, modelNumber, serialNumber, warrantyExpires] = database.queryDriveInfo(ataSmart.vars[i].SerialNumber);
 
-        drives_.push_back(make_shared<Drive>(id, ataSmart.vars[i].DriveMap, ataSmart.vars[i].DiskVendorId, vendor, modelNumber, serialNumber, warrantyExpires));
+        if (id.Compare(_T("0")))
+        {
+            drives_.push_back(make_shared<Drive>(id, ataSmart.vars[i].DriveMap, vendor, modelNumber, serialNumber, warrantyExpires));
+        }
+        else
+        {
+            drives_.push_back(make_shared<Drive>(id, ataSmart.vars[i].DriveMap, VendorList[ataSmart.vars[i].DiskVendorId], modelNumber, serialNumber, warrantyExpires));
+        }
     }
 }
 
