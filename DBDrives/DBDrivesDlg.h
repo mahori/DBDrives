@@ -22,5 +22,13 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 private:
+    CComboBox m_ComboBox;
+    CEdit m_EditID;
+    CEdit m_EditVendor;
+    CEdit m_EditModelNumber;
+    CEdit m_EditSerialNumber;
+    CEdit m_EditWarrantyExpires;
     std::shared_ptr<Drives> m_pDrives;
+
+    afx_msg void OnCbnSelchangeCombobox(void);
 };

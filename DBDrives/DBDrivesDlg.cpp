@@ -21,12 +21,19 @@ CDBDrivesDlg::CDBDrivesDlg(CWnd* pParent)
 void CDBDrivesDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialogEx::DoDataExchange(pDX);
+    DDX_Control(pDX, IDC_COMBOBOX, m_ComboBox);
+    DDX_Control(pDX, IDC_EDIT_ID, m_EditID);
+    DDX_Control(pDX, IDC_EDIT_VENDOR, m_EditVendor);
+    DDX_Control(pDX, IDC_EDIT_MODEL_NUMBER, m_EditModelNumber);
+    DDX_Control(pDX, IDC_EDIT_SERIAL_NUMBER, m_EditSerialNumber);
+    DDX_Control(pDX, IDC_EDIT_WARRANTY_EXPIRES, m_EditWarrantyExpires);
 }
 
 BEGIN_MESSAGE_MAP(CDBDrivesDlg, CDialogEx)
     ON_WM_SYSCOMMAND()
     ON_WM_PAINT()
     ON_WM_QUERYDRAGICON()
+    ON_CBN_SELCHANGE(IDC_COMBOBOX, &CDBDrivesDlg::OnCbnSelchangeCombobox)
 END_MESSAGE_MAP()
 
 BOOL CDBDrivesDlg::OnInitDialog(void)
@@ -52,6 +59,13 @@ BOOL CDBDrivesDlg::OnInitDialog(void)
 
     SetIcon(m_hIcon, TRUE);
     SetIcon(m_hIcon, FALSE);
+
+    for (auto i = 0; i < m_pDrives->count(); ++i)
+    {
+        m_ComboBox.AddString(m_pDrives->caption(i));
+    }
+    m_ComboBox.SetCurSel(0);
+    OnCbnSelchangeCombobox();
 
     return TRUE;
 }
@@ -95,4 +109,15 @@ void CDBDrivesDlg::OnPaint(void)
 HCURSOR CDBDrivesDlg::OnQueryDragIcon(void)
 {
     return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CDBDrivesDlg::OnCbnSelchangeCombobox(void)
+{
+    int index = m_ComboBox.GetCurSel();
+
+    m_EditID.SetWindowText(m_pDrives->id(index));
+    m_EditVendor.SetWindowText(m_pDrives->vendor(index));
+    m_EditModelNumber.SetWindowText(m_pDrives->modelNumber(index));
+    m_EditSerialNumber.SetWindowText(m_pDrives->serialNumber(index));
+    m_EditWarrantyExpires.SetWindowText(m_pDrives->warrantyExpires(index));
 }

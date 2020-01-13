@@ -40,3 +40,33 @@ Drive::Drive(const CString& id, const CString& driveLetter, int vendorID, const 
     TRACE2("\tVendorID = %d, Vendor = %s\n", vendorID_, vendor_);
     TRACE3("\tModelNumber = %s, SeriaNumber = %s, WarrantyExpires = %s\n", modelNumber_, serialNumber_, warrantyExpires_);
 }
+
+CString Drive::id(void) const
+{
+    return id_;
+}
+
+CString Drive::serialNumber(void) const
+{
+    return serialNumber_;
+}
+
+CString Drive::driveLetter(void) const
+{
+    return driveLetter_;
+}
+
+CString Drive::vendor(void) const
+{
+    return vendor_;
+}
+
+CString Drive::modelNumber(void) const
+{
+    return modelNumber_;
+}
+
+CString Drive::warrantyExpires(void) const
+{
+    return warrantyExpires_;
+}
