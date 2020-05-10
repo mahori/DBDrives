@@ -236,9 +236,6 @@ public:
 		while(1)			//無限ループではない！
 		{
 			hManager = ::OpenSCManager(NULL,NULL,GENERIC_EXECUTE);
-#ifndef DEBUG_MAHORI
-			ATLASSERT(hManager);
-#endif
 			if(hManager == NULL)
 				break;
 

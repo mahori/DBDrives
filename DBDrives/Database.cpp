@@ -3,21 +3,9 @@
 
 using namespace std;
 
-#ifdef DEBUG_MAHORI
-static LPCTSTR IDList[8] = { _T("63"), _T("0"), _T("11"), _T("0"), _T("68"), _T("0"), _T("0"), _T("0") };
-static LPCTSTR VendorList[8] = { _T("Seagate Technology"), _T(""), _T("Western Digital"), _T(""), _T("Seagate Technology"), _T(""), _T(""), _T("") };
-static LPCTSTR ModelNumberList[8] = { _T("ST4000VN008-2DR166"), _T(""), _T("WDC WD20EARS-00MVWB0"), _T(""), _T("ST6000DM003-2CY186"), _T(""), _T(""), _T("") };
-static LPCTSTR WarrantyExpiresList[8] = { _T("2021-11-07 00:00:00"), _T(""), _T("2013-09-09 00:00:00") , _T("") , _T("2021-03-15 00:00:00") , _T("") , _T("") , _T("") };
-#endif
-
 Database::Database(void)
-#ifdef DEBUG_MAHORI
-    : index_(0)
-#else
     : pDatabase_(make_unique<CDatabase>())
-#endif
 {
-#ifndef DEBUG_MAHORI
     connectString_ = ::AfxGetApp()->GetProfileString(_T("Database"), _T("ConnectString"), nullptr);
 
     try
@@ -29,17 +17,14 @@ Database::Database(void)
         pe->ReportError();
         pe->Delete();
     }
-#endif
 }
 
 Database::~Database(void)
 {
-#ifndef DEBUG_MAHORI
     if (pDatabase_->IsOpen())
     {
         pDatabase_->Close();
     }
-#endif
 }
 
 tuple<size_t, CString, CString, CString, COleDateTime> Database::queryDriveInfo(const CString& serialNumber)
@@ -50,13 +35,6 @@ tuple<size_t, CString, CString, CString, COleDateTime> Database::queryDriveInfo(
     // CString serialNumber;
     COleDateTime warrantyExpires;
 
-#ifdef DEBUG_MAHORI
-    id              = IDList[index_];
-    vendor          = VendorList[index_];
-    modelNumber     = ModelNumberList[index_];
-    warrantyExpires = WarrantyExpiresList[index_];
-    ++index_;
-#else
     if (pDatabase_->IsOpen())
     {
         CString sql;
@@ -110,7 +88,6 @@ tuple<size_t, CString, CString, CString, COleDateTime> Database::queryDriveInfo(
             pe->Delete();
         }
     }
-#endif
 
     return make_tuple(id, vendor, modelNumber, serialNumber, warrantyExpires);
 }
